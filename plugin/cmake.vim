@@ -1,5 +1,5 @@
 " cmake.vim - Vim plugin to make working with CMake a little nicer
-" Maintainer:   Dirk Van Haetenborgh <http://vhdirk.github.com/>
+" Maintainer:   Dirk Van Haerenborgh <http://vhdirk.github.com/>
 " Version:      0.1
 
 let s:cmake_plugin_version = '0.1'
