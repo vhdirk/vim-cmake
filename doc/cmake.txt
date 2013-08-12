@@ -1,6 +1,7 @@
 *cmake.txt*  Vim plugin to make working with CMake a little nicer 
 
-Author:  Dirk Van Haerenborgh <http://vhdirk.github.com/>
+Authors:  Dirk Van Haerenborgh <http://vhdirk.github.com/>
+          Steven Batchelor <http://SteveDeFacto.github.com/>
 License: Same terms as Vim itself (see |license|)
 
 
@@ -17,3 +18,22 @@ COMMANDS                                        *cmake-commands*
                         search. All arguments are directly passed on to CMake.
                         Also modifies the :make command to build in 
                         that directory.
+                        
+:CMakeClean                      deletes all files in the build directory. You can
+                                 think of this as a CMake version of make clean.
+
+VARIABLES                                        *cmake-variables*
+
+g:cmake_install_prefix           same as -DCMAKE_INSTALL_PREFIX
+
+g:cmake_build_type               same as -DCMAKE_BUILD_TYPE
+
+g:cmake_cxx_compiler             same as -DCMAKE_CXX_COMPILER, however, do note that
+                                 the build directory will be cleared the next time you
+                                 run :CMake.
+
+g:cmake_c_compiler               same as -DCMAKE_C_COMPILER, however, do note that the
+                                 build directory will be cleared the next time you
+                                 run :CMake.
+
+g:cmake_build_shared_libs        same as -DBUILD_SHARED_LIBS
