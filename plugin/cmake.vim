@@ -26,7 +26,7 @@ command! CMakeClean call s:cmakeclean()
 function! s:cmake(...)
 
   let s:build_dir = finddir('build', '.;')
-  let &makeprg='cmake --build ' . s:build_dir
+  let &makeprg='cmake --build ' . shellescape(s:build_dir)
 
   exec 'cd' s:fnameescape(s:build_dir)
 
