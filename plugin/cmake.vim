@@ -26,42 +26,49 @@ command! CMakeClean call s:cmakeclean()
 function! s:cmake(...)
 
   let s:build_dir = finddir('build', '.;')
-  let &makeprg='cmake --build ' . shellescape(s:build_dir) . ' --target '
+  
+  if s:build_dir !=""
 
-  exec 'cd' s:fnameescape(s:build_dir)
+    let &makeprg='cmake --build ' . shellescape(s:build_dir) . ' --target '
 
-  let s:cleanbuild = 0
-  let l:argument=[]
-  if exists("g:cmake_install_prefix")
-    let l:argument+=  [ "-DCMAKE_INSTALL_PREFIX:FILEPATH="  . g:cmake_install_prefix ]
-  endif
-  if exists("g:cmake_build_type" )
-    let l:argument+= [ "-DCMAKE_BUILD_TYPE:STRING="         . g:cmake_build_type ]
-  endif
-  if exists("g:cmake_cxx_compiler")
-    let l:argument+= [ "-DCMAKE_CXX_COMPILER:FILEPATH="     . g:cmake_cxx_compiler ]
-    let s:cleanbuild = 1
-  endif
-  if exists("g:cmake_c_compiler")
-    let l:argument+= [ "-DCMAKE_C_COMPILER:FILEPATH="       . g:cmake_c_compiler ]
-    let s:cleanbuild = 1
-  endif
-  if exists("g:cmake_build_shared_libs")
-    let l:argument+= [ "-DBUILD_SHARED_LIBS:BOOL="          . g:cmake_build_shared_libs ]
-  endif
+    exec 'cd' s:fnameescape(s:build_dir)
 
-  let l:argumentstr = join(l:argument, " ")
+    let s:cleanbuild = 0
+    let l:argument=[]
+    if exists("g:cmake_install_prefix")
+      let l:argument+=  [ "-DCMAKE_INSTALL_PREFIX:FILEPATH="  . g:cmake_install_prefix ]
+    endif
+    if exists("g:cmake_build_type" )
+      let l:argument+= [ "-DCMAKE_BUILD_TYPE:STRING="         . g:cmake_build_type ]
+    endif
+    if exists("g:cmake_cxx_compiler")
+      let l:argument+= [ "-DCMAKE_CXX_COMPILER:FILEPATH="     . g:cmake_cxx_compiler ]
+      let s:cleanbuild = 1
+    endif
+    if exists("g:cmake_c_compiler")
+      let l:argument+= [ "-DCMAKE_C_COMPILER:FILEPATH="       . g:cmake_c_compiler ]
+      let s:cleanbuild = 1
+    endif
+    if exists("g:cmake_build_shared_libs")
+      let l:argument+= [ "-DBUILD_SHARED_LIBS:BOOL="          . g:cmake_build_shared_libs ]
+    endif
 
-  if s:cleanbuild > 0
-    echo system("rm -r *" )
+    let l:argumentstr = join(l:argument, " ")
+
+    if s:cleanbuild > 0
+      echo system("rm -r *" )
+    endif
+
+    let s:cmd = 'cmake '. l:argumentstr . join(a:000) .' .. '
+    echo s:cmd
+    let s:res = system(s:cmd)
+    echo s:res
+
+    exec 'cd - '
+    
+  else
+    echo "Unable to find build directory."
   endif
-
-  let s:cmd = 'cmake '. l:argumentstr . join(a:000) .' .. '
-  echo s:cmd
-  let s:res = system(s:cmd)
-  echo s:res
-
-  exec 'cd - '
 
 endfunction
 
