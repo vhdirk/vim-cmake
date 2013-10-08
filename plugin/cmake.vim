@@ -75,7 +75,11 @@ endfunction
 function! s:cmakeclean()
 
   let s:build_dir = finddir('build', '.;')
-  echo system("rm -r " . s:build_dir. "/*" )
-  echo "Build directory has been cleaned."
+  if s:build_dir !=""
+    echo system("rm -r " . s:build_dir. "/*" )
+    echo "Build directory has been cleaned."
+  else
+    echo "Unable to find build directory."
+  endif
 
 endfunction
