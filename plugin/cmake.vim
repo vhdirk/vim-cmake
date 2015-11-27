@@ -59,7 +59,7 @@ function! s:cmake(...)
       echo system("rm -r *" )
     endif
 
-    let s:cmd = 'cmake '. l:argumentstr . join(a:000) .' .. '
+    let s:cmd = 'cmake '. l:argumentstr . " " . join(a:000) .' .. '
     echo s:cmd
     let s:res = system(s:cmd)
     echo s:res
