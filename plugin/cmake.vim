@@ -25,8 +25,9 @@ command! CMakeClean call s:cmakeclean()
 
 function! s:cmake(...)
 
-  let s:build_dir = finddir('build', '.;')
-  
+  let g:cmake_build_dir = get(g:, 'cmake_build_dir', 'build')
+  let s:build_dir = finddir(g:cmake_build_dir, '.;')
+
   if s:build_dir !=""
 
     let &makeprg='cmake --build ' . shellescape(s:build_dir) . ' --target '
@@ -65,7 +66,7 @@ function! s:cmake(...)
     echo s:res
 
     exec 'cd - '
-    
+
   else
     echo "Unable to find build directory."
   endif
