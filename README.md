@@ -19,6 +19,8 @@ you can just use quickfix as with a normal Makefile project.
 
 ### Variables
 
+ * `g:cmake_generator` same as `-G`
+
  * `g:cmake_install_prefix` same as `-DCMAKE_INSTALL_PREFIX`
 
  * `g:cmake_build_type` same as `-DCMAKE_BUILD_TYPE`

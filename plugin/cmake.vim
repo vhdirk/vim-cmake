@@ -36,6 +36,9 @@ function! s:cmake(...)
 
     let s:cleanbuild = 0
     let l:argument=[]
+    if exists("g:cmake_generator")
+      let l:argument+=  [ "-G "                               . g:cmake_generator ]
+    endif
     if exists("g:cmake_install_prefix")
       let l:argument+=  [ "-DCMAKE_INSTALL_PREFIX:FILEPATH="  . g:cmake_install_prefix ]
     endif
