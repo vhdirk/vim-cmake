@@ -2,6 +2,7 @@
 
 Authors:  Dirk Van Haerenborgh <http://vhdirk.github.com/>
           Steven Batchelor <http://SteveDeFacto.github.com/>
+		  Nicolás Ortega <https://themusicinnoise.net>
 License: Same terms as Vim itself (see |license|)
 
 
@@ -23,6 +24,8 @@ COMMANDS                                        *cmake-commands*
                                  think of this as a CMake version of make clean.
 
 VARIABLES                                        *cmake-variables*
+
+g:cmake_generator                same as -G
 
 g:cmake_install_prefix           same as -DCMAKE_INSTALL_PREFIX
 
