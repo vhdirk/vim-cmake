@@ -1,4 +1,6 @@
 # vim-cmake
+[![Travis (Linux)](https://travis-ci.org/Squareys/vim-cmake.svg?branch=master)](https://travis-ci.org/Squareys/vim-cmake)
+[![AppVeyor (Windows)](https://ci.appveyor.com/api/projects/status/8x1tk0wbu4564m43?svg=true)](https://ci.appveyor.com/project/Squareys/vim-cmake)
 
 vim-cmake is a Vim plugin to make working with CMake a little nicer.
 
