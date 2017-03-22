@@ -1,0 +1,48 @@
+Before:
+  " Ensure we are in the test directory
+  if isdirectory("test")
+    cd test
+  endif
+
+  if !exists("test_dir")
+    let test_dir = fnamemodify(getcwd(), ':p')
+  endif
+
+  if !isdirectory("test project/build")
+    echo system("mkdir 'test project/build'")
+  endif
+
+  Assert isdirectory("test project/build"), "TEST ERROR: build directory was not created"
+
+After:
+  exec "cd" fnameescape(test_dir)
+  echo system("rm -rf 'test project/build'")
+
+Execute (Find build directory from working dir):
+  cd test\ project
+  CMake
+
+  Assert filereadable("build/CMakeCache.txt"), "CMakeCache.txt should be generated"
+
+Execute (Find build directory from currently open file):
+  e test\ project/CMakeLists.txt
+  CMake
+  Assert filereadable("test project/build/CMakeCache.txt"), "CMakeCache.txt should be generated"
+
+Execute (Open already configured cmake project):
+  cd test\ project/build
+  silent !cmake .. -DWITH_BYE=ON
+  e ../CMakeLists.txt
+  CMake
+  silent make
+
+  enew
+  if has("win32") || has("win32unix")
+    read !Debug/hello.exe
+  else
+    read !./hello
+  endif
+Expect:
+
+  Hello World
+  Bye World
