@@ -9,6 +9,10 @@ if exists("loaded_cmake_plugin")
 endif
 let loaded_cmake_plugin = 1
 
+function! s:find_build_dir()
+  let g:cmake_build_dir = get(g:, 'cmake_build_dir', 'build')
+  let s:build_dir = finddir(g:cmake_build_dir, '.;')
+endfunction
 
 function! s:cmake_configure()
   exec 'cd' s:fnameescape(s:build_dir)
@@ -65,9 +69,7 @@ command! -nargs=? CMake call s:cmake(<f-args>)
 command! CMakeClean call s:cmakeclean()
 
 function! s:cmake(...)
-
-  let g:cmake_build_dir = get(g:, 'cmake_build_dir', 'build')
-  let s:build_dir = finddir(g:cmake_build_dir, '.;')
+  call s:find_build_dir()
 
   if s:build_dir != ""
     let &makeprg = 'cmake --build ' . shellescape(s:build_dir) . ' --target'
@@ -79,8 +81,8 @@ function! s:cmake(...)
 endfunction
 
 function! s:cmakeclean()
+  call s:find_build_dir()
 
-  let s:build_dir = finddir('build', '.;')
   if s:build_dir != ""
     echo system("rm -r '" . s:build_dir. "'/*")
     echo "Build directory has been cleaned."
