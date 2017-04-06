@@ -15,6 +15,12 @@ function! s:find_build_dir()
 endfunction
 
 function! s:cmake_configure()
+  if filereadable(s:build_dir . "/CMakeCache.txt") && !s:cleanbuild
+    " Only change values of variables, if project is not configured
+    " already, otherwise we override existing configuration.
+    return
+  endif
+
   exec 'cd' s:fnameescape(s:build_dir)
 
   let s:cleanbuild = 0
