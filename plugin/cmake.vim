@@ -14,8 +14,23 @@ function! s:find_build_dir()
   let s:build_dir = expand(finddir(g:cmake_build_dir, '.;'))
 endfunction
 
-function! s:cmake_configure()
-  if filereadable(s:build_dir . "/CMakeCache.txt") && !s:cleanbuild
+" Configure the cmake project in the currently set build dir.
+"
+" :param force: Force configuration even if CMakeCache.txt already exists in
+" build dir. This will override any of the following variables if the
+" corresponding vim variable is set:
+"   * CMAKE_INSTALL_PREFIX
+"   * CMAKE_BUILD_TYPE
+"   * CMAKE_BUILD_SHARED_LIBS
+" In addition, previous configuration files will be deleted if the
+" corresponding vim variables for the following are set:
+"   * CMAKE_CXX_COMPILER
+"   * CMAKE_C_COMPILER
+"   * The generator
+"
+" Will do nothing if the project is already configured and force is disabled.
+function! s:cmake_configure(force)
+  if filereadable(s:build_dir . "/CMakeCache.txt") && !a:force
     " Only change values of variables, if project is not configured
     " already, otherwise we override existing configuration.
     return
@@ -80,7 +95,7 @@ function! s:cmake(...)
 
   if s:build_dir != ""
     let &makeprg = 'cmake --build ' . shellescape(s:build_dir) . ' --target'
-    call s:cmake_configure()
+    call s:cmake_configure(0)
   else
     echom "Unable to find build directory."
   endif
