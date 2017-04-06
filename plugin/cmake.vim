@@ -7,7 +7,16 @@ let s:cmake_plugin_version = '0.2'
 if exists("loaded_cmake_plugin")
   finish
 endif
+
+" We set this variable here even though the plugin may not actually be loaded
+" because the executable is not found. Otherwise the error message will be
+" displayed more than once.
 let loaded_cmake_plugin = 1
+
+if !executable("cmake")
+  echoerr "vim-cmake requires cmake executable. Please make sure it is installed and on PATH."
+  finish
+endif
 
 function! s:find_build_dir()
   let g:cmake_build_dir = get(g:, 'cmake_build_dir', 'build')
