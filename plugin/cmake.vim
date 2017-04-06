@@ -81,7 +81,7 @@ function! s:cmake(...)
     let &makeprg = 'cmake --build ' . shellescape(s:build_dir) . ' --target'
     call s:cmake_configure()
   else
-    echo "Unable to find build directory."
+    echom "Unable to find build directory."
   endif
 
 endfunction
@@ -91,9 +91,9 @@ function! s:cmakeclean()
 
   if s:build_dir != ""
     echo system("rm -r '" . s:build_dir. "'/*")
-    echo "Build directory has been cleaned."
+    echom "Build directory has been cleaned."
   else
-    echo "Unable to find build directory."
+    echom "Unable to find build directory."
   endif
 
 endfunction
