@@ -12,6 +12,9 @@ endif
 " because the executable is not found. Otherwise the error message will be
 " displayed more than once.
 let loaded_cmake_plugin = 1
+if !exists("g:cmake_export_compile_commands")
+  let g:cmake_export_compile_commands = 0
+endif
 
 if !executable("cmake")
   echoerr "vim-cmake requires cmake executable. Please make sure it is installed and on PATH."
@@ -80,6 +83,9 @@ function! s:cmake_configure(force)
   endif
   if exists("g:cmake_build_shared_libs")
     let l:argument += [ "-DBUILD_SHARED_LIBS:BOOL="          . g:cmake_build_shared_libs ]
+  endif
+  if g:cmake_export_compile_commands
+    let l:argument += [ "-DCMAKE_EXPORT_COMPILE_COMMANDS=ON" ]
   endif
 
   let l:argumentstr = join(l:argument, " ")
