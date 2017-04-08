@@ -20,7 +20,12 @@ endif
 
 function! s:find_build_dir()
   let g:cmake_build_dir = get(g:, 'cmake_build_dir', 'build')
-  let s:build_dir = expand(finddir(g:cmake_build_dir, '.;'))
+  let s:build_dir = finddir(g:cmake_build_dir, '.;')
+
+  if s:build_dir == ""
+    " Find build directory in path of current file
+    let s:build_dir = finddir(g:cmake_build_dir, expand("%:p:h") . ';')
+  endif
 endfunction
 
 " Configure the cmake project in the currently set build dir.
