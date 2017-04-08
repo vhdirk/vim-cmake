@@ -85,12 +85,12 @@ function! s:cmake_configure(force)
   let l:argumentstr = join(l:argument, " ")
 
   if s:cleanbuild > 0
-    echo system("rm -r *" )
+    silent echo system("rm -r *" )
   endif
 
   let s:cmd = 'cmake '. l:argumentstr . " " . join(a:000) .' .. '
   echo s:cmd
-  let s:res = system(s:cmd)
+  silent let s:res = system(s:cmd)
   echo s:res
 
   exec 'cd -'
@@ -126,7 +126,7 @@ function! s:cmakeclean()
   call s:find_build_dir()
 
   if s:build_dir != ""
-    echo system("rm -r '" . s:build_dir. "'/*")
+    silent echo system("rm -r '" . s:build_dir. "'/*")
     echom "Build directory has been cleaned."
   else
     echom "Unable to find build directory."
