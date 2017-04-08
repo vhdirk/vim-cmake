@@ -28,16 +28,22 @@ g:cmake_install_prefix           same as -DCMAKE_INSTALL_PREFIX
 
 g:cmake_build_type               same as -DCMAKE_BUILD_TYPE
 
-g:cmake_cxx_compiler             same as -DCMAKE_CXX_COMPILER, however, do note that
-                                 the build directory will be cleared the next time you
-                                 run :CMake.
+g:cmake_cxx_compiler             same as -DCMAKE_CXX_COMPILER, however, this will have
+                                 no effect until you run :CMakeClean and :CMake.
 
-g:cmake_c_compiler               same as -DCMAKE_C_COMPILER, however, do note that the
-                                 build directory will be cleared the next time you
-                                 run :CMake.
+g:cmake_c_compiler               same as -DCMAKE_C_COMPILER, however, this will have
+                                 no effect until you run :CMakeClean and :CMake.
 
 g:cmake_build_shared_libs        same as -DBUILD_SHARED_LIBS
 
 g:cmake_build_dir                set the cmake 'build' directory, default: 'build'
 
-g:cmake_project_generator        set project generator
+g:cmake_project_generator        set project generator, however, this will have
+                                 no effect until you run :CMakeClean and :CMake.
+
+
+OPTIONS                                        *cmake-options*
+
+g:cmake_export_compile_commands  same as -DCMAKE_EXPORT_COMPILE_COMMANDS=ON, useful for
+                                 exporting a compilation database to be used with YCM
+                                 (https://github.com/Valloric/YouCompleteMe#c-family-semantic-completion)
