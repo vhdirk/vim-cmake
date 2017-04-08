@@ -47,3 +47,7 @@ OPTIONS                                        *cmake-options*
 g:cmake_export_compile_commands  same as -DCMAKE_EXPORT_COMPILE_COMMANDS=ON, useful for
                                  exporting a compilation database to be used with YCM
                                  (https://github.com/Valloric/YouCompleteMe#c-family-semantic-completion)
+                                 CMake only supports this flag with Ninja and Makefile generators.
+
+g:cmake_ycm_symlinks             create a symlink to the compile_commands.json file in the
+                                 root of the project (build/..) if the file is found.

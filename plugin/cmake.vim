@@ -17,6 +17,9 @@ let loaded_cmake_plugin = 1
 if !exists("g:cmake_export_compile_commands")
   let g:cmake_export_compile_commands = 0
 endif
+if !exists("g:cmake_ycm_symlinks")
+  let g:cmake_ycm_symlinks = 0
+endif
 
 if !executable("cmake")
   echoerr "vim-cmake requires cmake executable. Please make sure it is installed and on PATH."
@@ -37,6 +40,7 @@ function! s:find_build_dir()
     " this as an indicator that build was not found
     let s:build_dir = fnamemodify(s:build_dir, ':p')
   endif
+
 endfunction
 
 " Configure the cmake project in the currently set build dir.
@@ -57,7 +61,7 @@ function! s:cmake_configure()
   let l:argument = []
   " Only change values of variables, if project is not configured
   " already, otherwise we overwrite existing configuration.
-  let l:configured = filereadable(s:build_dir . "/CMakeCache.txt")
+  let l:configured = filereadable("CMakeCache.txt")
 
   if !l:configured
     if exists("g:cmake_project_generator")
@@ -90,6 +94,16 @@ function! s:cmake_configure()
   echo s:cmd
   silent let s:res = system(s:cmd)
   echo s:res
+
+  " Create symbolic link to compilation database for use with YouCompleteMe
+  if g:cmake_ycm_symlinks && filereadable("compile_commands.json")
+    if has("win32")
+      exec "mklink" "../compile_commands.json" "compile_commands.json"
+    else
+      silent echo system("ln -s " . s:fnameescape(s:build_dir) ."/compile_commands.json ../compile_commands.json")
+    endif
+    echom "Created symlink to compilation database"
+  endif
 
   exec 'cd -'
 endfunction

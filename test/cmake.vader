@@ -17,17 +17,31 @@ Before:
 After:
   exec "cd" fnameescape(test_dir)
   echo system("rm -rf 'test project/build'")
+  echo system("rm -f 'test project/compile_commands.json'")
 
 Execute (Find build directory from working dir):
   cd test\ project
   CMake
 
   Assert filereadable("build/CMakeCache.txt"), "CMakeCache.txt should be generated"
+  Assert !filereadable("build/compile_commands.json"), "Compile commands should not be exported by default"
 
 Execute (Find build directory from currently open file):
   e test\ project/CMakeLists.txt
   CMake
   Assert filereadable("test project/build/CMakeCache.txt"), "CMakeCache.txt should be generated"
+
+Execute (Create symlink to compilation database):
+  let g:cmake_export_compile_commands = 1
+  let g:cmake_ycm_symlinks = 1
+  cd test\ project
+  CMake
+
+  " Exporting compile commands does not work with Visual Studio generator
+  if !has("win32") && !has("win32unix")
+    Assert filereadable("build/compile_commands.json"), "Compile commands should be exported"
+    Assert filereadable(resolve("compile_commands.json")), "A symlink should be generated"
+  endif
 
 Execute (Open already configured cmake project):
   cd test\ project/build
