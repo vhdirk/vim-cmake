@@ -26,6 +26,12 @@ function! s:find_build_dir()
     " Find build directory in path of current file
     let s:build_dir = finddir(g:cmake_build_dir, expand("%:p:h") . ';')
   endif
+
+  if s:build_dir != ""
+    " expand() would expand "" to working directory, but we need
+    " this as an indicator that build was not found
+    let s:build_dir = fnamemodify(s:build_dir, ':p')
+  endif
 endfunction
 
 " Configure the cmake project in the currently set build dir.
