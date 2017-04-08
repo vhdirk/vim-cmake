@@ -12,6 +12,8 @@ endif
 " because the executable is not found. Otherwise the error message will be
 " displayed more than once.
 let loaded_cmake_plugin = 1
+
+" Set option defaults
 if !exists("g:cmake_export_compile_commands")
   let g:cmake_export_compile_commands = 0
 endif
@@ -39,47 +41,41 @@ endfunction
 
 " Configure the cmake project in the currently set build dir.
 "
-" :param force: Force configuration even if CMakeCache.txt already exists in
-" build dir. This will override any of the following variables if the
+" This will override any of the following variables if the
 " corresponding vim variable is set:
 "   * CMAKE_INSTALL_PREFIX
 "   * CMAKE_BUILD_TYPE
 "   * CMAKE_BUILD_SHARED_LIBS
-" In addition, previous configuration files will be deleted if the
-" corresponding vim variables for the following are set:
+" If the project is not configured already, the following variables will be set
+" whenever the corresponding vim variable for the following is set:
 "   * CMAKE_CXX_COMPILER
 "   * CMAKE_C_COMPILER
-"   * The generator
-"
-" Will do nothing if the project is already configured and force is disabled.
-function! s:cmake_configure(force)
-  if filereadable(s:build_dir . "/CMakeCache.txt") && !a:force
-    " Only change values of variables, if project is not configured
-    " already, otherwise we override existing configuration.
-    return
-  endif
-
+"   * The generator (-G)
+function! s:cmake_configure()
   exec 'cd' s:fnameescape(s:build_dir)
 
-  let s:cleanbuild = 0
   let l:argument = []
-  if exists("g:cmake_project_generator")
-    let l:argument += [ "-G \"" . g:cmake_project_generator . "\"" ]
-    let s:cleanbuild = 1
+  " Only change values of variables, if project is not configured
+  " already, otherwise we overwrite existing configuration.
+  let l:configured = filereadable(s:build_dir . "/CMakeCache.txt")
+
+  if !l:configured
+    if exists("g:cmake_project_generator")
+        let l:argument += [ "-G \"" . g:cmake_project_generator . "\"" ]
+    endif
+    if exists("g:cmake_cxx_compiler")
+        let l:argument += [ "-DCMAKE_CXX_COMPILER:FILEPATH="     . g:cmake_cxx_compiler ]
+    endif
+    if exists("g:cmake_c_compiler")
+        let l:argument += [ "-DCMAKE_C_COMPILER:FILEPATH="       . g:cmake_c_compiler ]
+    endif
   endif
+
   if exists("g:cmake_install_prefix")
     let l:argument += [ "-DCMAKE_INSTALL_PREFIX:FILEPATH="  . g:cmake_install_prefix ]
   endif
   if exists("g:cmake_build_type" )
     let l:argument += [ "-DCMAKE_BUILD_TYPE:STRING="         . g:cmake_build_type ]
-  endif
-  if exists("g:cmake_cxx_compiler")
-    let l:argument += [ "-DCMAKE_CXX_COMPILER:FILEPATH="     . g:cmake_cxx_compiler ]
-    let s:cleanbuild = 1
-  endif
-  if exists("g:cmake_c_compiler")
-    let l:argument += [ "-DCMAKE_C_COMPILER:FILEPATH="       . g:cmake_c_compiler ]
-    let s:cleanbuild = 1
   endif
   if exists("g:cmake_build_shared_libs")
     let l:argument += [ "-DBUILD_SHARED_LIBS:BOOL="          . g:cmake_build_shared_libs ]
@@ -89,10 +85,6 @@ function! s:cmake_configure(force)
   endif
 
   let l:argumentstr = join(l:argument, " ")
-
-  if s:cleanbuild > 0
-    silent echo system("rm -r *" )
-  endif
 
   let s:cmd = 'cmake .. '. l:argumentstr . " " . join(a:000)
   echo s:cmd
@@ -121,7 +113,7 @@ function! s:cmake(...)
 
   if s:build_dir != ""
     let &makeprg = 'cmake --build ' . shellescape(s:build_dir) . ' --target'
-    call s:cmake_configure(0)
+    call s:cmake_configure()
   else
     echom "Unable to find build directory."
   endif
