@@ -88,7 +88,7 @@ function! s:cmake_configure(force)
     silent echo system("rm -r *" )
   endif
 
-  let s:cmd = 'cmake '. l:argumentstr . " " . join(a:000) .' .. '
+  let s:cmd = 'cmake .. '. l:argumentstr . " " . join(a:000)
   echo s:cmd
   silent let s:res = system(s:cmd)
   echo s:res
