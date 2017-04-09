@@ -19,19 +19,27 @@ you can just use quickfix as with a normal Makefile project.
 
  * `:CMakeClean` deletes all files in the build directory. You can think of this as a CMake version of make clean.
 
+ * `:CMakeFindBuildDir` resets the build directory path set for the current buffer and then tries to find a new one. Useful if it previously found a wrong path to then reset it after a new build folder has been created for example.
+
 ### Variables
 
  * `g:cmake_install_prefix` same as `-DCMAKE_INSTALL_PREFIX`
 
  * `g:cmake_build_type` same as `-DCMAKE_BUILD_TYPE`
 
- * `g:cmake_cxx_compiler` same as `-DCMAKE_CXX_COMPILER`. The build directory will be cleared the next time you run :CMake.
+ * `g:cmake_cxx_compiler` same as `-DCMAKE_CXX_COMPILER`. Changes will have no effect until you run :CMakeClean and then :CMake.
 
- * `g:cmake_c_compiler` same as `-DCMAKE_C_COMPILER`. The build directory will be cleared the next time you run :CMake.
+ * `g:cmake_c_compiler` same as `-DCMAKE_C_COMPILER`. Changes will have no effect until you run :CMakeClean and then :CMake.
 
  * `g:cmake_build_shared_libs` same as `-DBUILD_SHARED_LIBS`
 
- * `g:cmake_project_generator` same as `-G`. The build directory will be cleared the next time you run :CMake.
+ * `g:cmake_project_generator` same as `-G`. Changes will have no effect until you run :CMakeClean and then :CMake.
+
+ * `g:cmake_export_compile_commands` same as `-DCMAKE_EXPORT_COMPILE_COMMANDS`.
+
+ * `g:cmake_ycm_symlinks` create symlinks to the generated compilation database for use with [YouCompleteMe](https://github.com/Valloric/YouCompleteMe/).
+
+ * `b:build_dir` is the path to the cmake build directory for the current buffer. This variable is set with the first :CMake or :CMakeFindBuildDir call. Once found, it will not be searched for again unless you call :CMakeFindBuildDir. If automatic finding is not sufficient you can set this variable manually to the build dir of your choice.
 
 
 ## Installation
@@ -56,6 +64,7 @@ With [Vundle.vim](https://github.com/VundleVim/Vundle.vim) simply add this repos
 ## Acknowledgements
 
  * Thanks to [Tim Pope](http://tpo.pe/), his plugins are really awesome.
+ * Thanks to [Junegunn Choi](https://junegunn.kr/), for [vader.vim](https://github.com/junegunn/vader.vim), which is the testing framework used for this plugin.
  * Also thanks to
     * @SteveDeFacto for extending this with more fine grained control.
     * @snikulov for enhancing makeprg.
