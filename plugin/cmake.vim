@@ -27,18 +27,29 @@ if !executable("cmake")
 endif
 
 function! s:find_build_dir()
-  let g:cmake_build_dir = get(g:, 'cmake_build_dir', 'build')
-  let s:build_dir = finddir(g:cmake_build_dir, expand(".") . ';')
-
-  if s:build_dir == ""
-    " Find build directory in path of current file
-    let s:build_dir = finddir(g:cmake_build_dir, expand("%:p:h") . ';')
+  " Do not overwrite already found build_dir, may be set explicitly
+  " by user.
+  if exists("b:build_dir") && b:build_dir != ""
+    return 1
   endif
 
-  if s:build_dir != ""
+  let g:cmake_build_dir = get(g:, 'cmake_build_dir', 'build')
+  let b:build_dir = finddir(g:cmake_build_dir, expand(".") . ';')
+
+  if b:build_dir == ""
+    " Find build directory in path of current file
+    let b:build_dir = finddir(g:cmake_build_dir, expand("%:p:h") . ';')
+  endif
+
+  if b:build_dir != ""
     " expand() would expand "" to working directory, but we need
     " this as an indicator that build was not found
-    let s:build_dir = fnamemodify(s:build_dir, ':p')
+    let b:build_dir = fnamemodify(b:build_dir, ':p')
+    echom "Found cmake build directory: " . s:fnameescape(b:build_dir)
+    return 1
+  else
+    echom "Unable to find cmake build directory."
+    return 0
   endif
 
 endfunction
@@ -56,7 +67,7 @@ endfunction
 "   * CMAKE_C_COMPILER
 "   * The generator (-G)
 function! s:cmake_configure()
-  exec 'cd' s:fnameescape(s:build_dir)
+  exec 'cd' s:fnameescape(b:build_dir)
 
   let l:argument = []
   " Only change values of variables, if project is not configured
@@ -100,7 +111,7 @@ function! s:cmake_configure()
     if has("win32")
       exec "mklink" "../compile_commands.json" "compile_commands.json"
     else
-      silent echo system("ln -s " . s:fnameescape(s:build_dir) ."/compile_commands.json ../compile_commands.json")
+      silent echo system("ln -s " . s:fnameescape(b:build_dir) ."/compile_commands.json ../compile_commands.json")
     endif
     echom "Created symlink to compilation database"
   endif
@@ -121,27 +132,28 @@ endfunction
 " Public Interface:
 command! -nargs=? CMake call s:cmake(<f-args>)
 command! CMakeClean call s:cmakeclean()
+command! CMakeFindBuildDir call s:cmake_find_build_dir()
+
+function! s:cmake_find_build_dir()
+  unlet b:build_dir
+  call s:find_build_dir()
+endfunction
 
 function! s:cmake(...)
-  call s:find_build_dir()
-
-  if s:build_dir != ""
-    let &makeprg = 'cmake --build ' . shellescape(s:build_dir) . ' --target'
-    call s:cmake_configure()
-  else
-    echom "Unable to find build directory."
+  if !s:find_build_dir()
+    return
   endif
 
+  let &makeprg = 'cmake --build ' . shellescape(b:build_dir) . ' --target'
+  call s:cmake_configure()
 endfunction
 
 function! s:cmakeclean()
-  call s:find_build_dir()
-
-  if s:build_dir != ""
-    silent echo system("rm -r '" . s:build_dir. "'/*")
-    echom "Build directory has been cleaned."
-  else
-    echom "Unable to find build directory."
+  if !s:find_build_dir()
+    return
   endif
 
+  silent echo system("rm -r '" . b:build_dir. "'/*")
+  echom "Build directory has been cleaned."
 endfunction
+
