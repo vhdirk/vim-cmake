@@ -93,7 +93,7 @@ function! s:cmake_configure()
   let s:cmd = 'cmake .. '. l:argumentstr . " " . join(a:000)
   echo s:cmd
   silent let s:res = system(s:cmd)
-  echo s:res
+  silent echo s:res
 
   " Create symbolic link to compilation database for use with YouCompleteMe
   if g:cmake_ycm_symlinks && filereadable("compile_commands.json")
