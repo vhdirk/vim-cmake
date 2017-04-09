@@ -8,10 +8,8 @@ Before:
     let test_dir = fnamemodify(getcwd(), ':p')
   endif
 
-  if !isdirectory("test project/build")
-    echo system("mkdir 'test project/build'")
-  endif
-
+  Assert !isdirectory("test project/build"), "TEST ERROR: build directory was not properly deleted"
+  echo system("mkdir 'test project/build'")
   Assert isdirectory("test project/build"), "TEST ERROR: build directory was not created"
 
 After:
