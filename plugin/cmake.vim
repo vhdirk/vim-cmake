@@ -34,11 +34,11 @@ function! s:find_build_dir()
   endif
 
   let g:cmake_build_dir = get(g:, 'cmake_build_dir', 'build')
-  let b:build_dir = finddir(g:cmake_build_dir, expand(".") . ';')
+  let b:build_dir = finddir(g:cmake_build_dir, ';')
 
   if b:build_dir == ""
     " Find build directory in path of current file
-    let b:build_dir = finddir(g:cmake_build_dir, expand("%:p:h") . ';')
+    let b:build_dir = finddir(g:cmake_build_dir, s:fnameescape(expand("%:p:h")) . ';')
   endif
 
   if b:build_dir != ""
