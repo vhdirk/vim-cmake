@@ -56,6 +56,9 @@ function! s:cmake(...)
     if exists("g:cmake_build_shared_libs")
       let l:argument+= [ "-DBUILD_SHARED_LIBS:BOOL="          . g:cmake_build_shared_libs ]
     endif
+    if exists("g:cmake_usr_args")
+      let l:argument+= [ g:cmake_usr_args ]
+    endif
 
     let l:argumentstr = join(l:argument, " ")
 

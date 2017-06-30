@@ -41,3 +41,5 @@ g:cmake_build_shared_libs        same as -DBUILD_SHARED_LIBS
 g:cmake_build_dir                set the cmake 'build' directory, default: 'build'
 
 g:cmake_project_generator        set project generator
+
+g:cmake_usr_args                 custom user arguments. Ex: 'let g:cmake_usr_args="-DDEBUG=YES"'
