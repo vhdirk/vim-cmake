@@ -28,8 +28,13 @@ function! s:cmake(...)
   let g:cmake_build_dir = get(g:, 'cmake_build_dir', 'build')
   let s:build_dir = finddir(g:cmake_build_dir, '.;')
 
-  if s:build_dir !=""
+  if s:build_dir == ""
+    echo g:cmake_build_dir
+    silent call mkdir(g:cmake_build_dir, 'p')
+    let s:build_dir = finddir(g:cmake_build_dir, '.;')
+  endif
 
+  if s:build_dir != ""
     let &makeprg='cmake --build ' . shellescape(s:build_dir) . ' --target '
 
     exec 'cd' s:fnameescape(s:build_dir)
