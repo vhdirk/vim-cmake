@@ -68,8 +68,14 @@ function! s:cmake(...)
 
     let s:cmd = 'cmake '. l:argumentstr . " " . join(a:000) .' .. '
     echo s:cmd
-    let s:res = system(s:cmd)
-    echo s:res
+    if exists(":AsyncRun")
+        execute 'copen'
+        execute 'AsyncRun ' . s:cmd
+        execute 'wincmd p'
+    else
+        let s:res = system(s:cmd)
+        echo s:res
+    endif
 
     exec 'cd - '
 
