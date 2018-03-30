@@ -84,7 +84,10 @@ function! s:cmake_configure()
     if exists("g:cmake_c_compiler")
         let l:argument += [ "-DCMAKE_C_COMPILER:FILEPATH="       . g:cmake_c_compiler ]
     endif
-  endif
+
+    if exists("g:cmake_usr_args")
+      let l:argument+= [ g:cmake_usr_args ]
+    endif
 
   if exists("g:cmake_install_prefix")
     let l:argument += [ "-DCMAKE_INSTALL_PREFIX:FILEPATH="  . g:cmake_install_prefix ]

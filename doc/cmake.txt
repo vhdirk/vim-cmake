@@ -47,6 +47,8 @@ g:cmake_build_dir                set the cmake 'build' directory, default: 'buil
 g:cmake_project_generator        set project generator, however, this will have
                                  no effect until you run :CMakeClean and :CMake.
 
+g:cmake_usr_args                 custom user arguments. Ex: 'let g:cmake_usr_args="-DDEBUG=YES"'
+
 b:build_dir                      the path to the cmake build directory for the current buffer.
                                  This variable is set with the first :CMake or :CMakeFindBuildDir call.
                                  Once found, it will not be searched for again unless you call
@@ -62,3 +64,4 @@ g:cmake_export_compile_commands  same as -DCMAKE_EXPORT_COMPILE_COMMANDS=ON, use
 
 g:cmake_ycm_symlinks             create a symlink to the compile_commands.json file in the
                                  root of the project (build/..) if the file is found.
+

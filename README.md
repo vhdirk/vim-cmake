@@ -16,6 +16,9 @@ and whenever one is found, it runs the cmake command there, assuming the CMakeLi
 file is just one directory above. Any arguments given to :CMake will be directly passed
 on to the cmake command. It also sets the working directory of the make command, so
 you can just use quickfix as with a normal Makefile project.
+If you have the [AsyncRun plugin](https://github.com/skywind3000/asyncrun.vim)
+installed, it will be used automatically and you will be able to check the
+result of the cmake command in the quickfix as well.
 
  * `:CMakeClean` deletes all files in the build directory. You can think of this as a CMake version of make clean.
 
