@@ -107,8 +107,14 @@ function! s:cmake_configure()
 
   let s:cmd = 'cmake .. '. l:argumentstr . " " . join(a:000)
   echo s:cmd
-  silent let s:res = system(s:cmd)
-  silent echo s:res
+  if exists(":AsyncRun")
+    execute 'copen'
+    execute 'AsyncRun ' . s:cmd
+    execute 'wincmd p'
+  else
+    silent let s:res = system(s:cmd)
+    silent echo s:res
+  endif
 
   " Create symbolic link to compilation database for use with YouCompleteMe
   if g:cmake_ycm_symlinks && filereadable("compile_commands.json")
