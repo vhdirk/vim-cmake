@@ -66,7 +66,7 @@ endfunction
 "   * CMAKE_CXX_COMPILER
 "   * CMAKE_C_COMPILER
 "   * The generator (-G)
-function! s:cmake_configure()
+function! s:cmake_configure(cmake_vim_command_args)
   exec 'cd' s:fnameescape(b:build_dir)
 
   let l:argument = []
@@ -107,7 +107,7 @@ function! s:cmake_configure()
   let l:escaped_build_dir=s:fnameescape(b:build_dir)
   let l:home_dir = "-H".l:escaped_build_dir."/.."
   let l:build_dir_path = "-B".l:escaped_build_dir
-  let s:cmd = 'cmake '.l:home_dir.' '.l:build_dir_path.' '.l:argumentstr . " " . join(a:000)
+  let s:cmd = 'cmake '.l:home_dir.' '.l:build_dir_path.' '.l:argumentstr . " " . join(a:cmake_vim_command_args)
 
   echo s:cmd
   if exists(":AsyncRun")
@@ -158,7 +158,7 @@ function! s:cmake(...)
   endif
 
   let &makeprg = 'cmake --build ' . shellescape(b:build_dir) . ' --target'
-  call s:cmake_configure()
+  call s:cmake_configure(a:000)
 endfunction
 
 function! s:cmakeclean()
