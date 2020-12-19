@@ -20,6 +20,9 @@ endif
 if !exists("g:cmake_ycm_symlinks")
   let g:cmake_ycm_symlinks = 0
 endif
+if !exists("g:cmake_use_smp")
+  let g:cmake_use_smp = 0
+endif
 
 if !executable("cmake")
   echoerr "vim-cmake requires cmake executable. Please make sure it is installed and on PATH."
@@ -142,6 +145,15 @@ function! s:fnameescape(file) abort
   endif
 endfunction
 
+function! s:find_smp()
+  if executable('nproc')
+    let l:nproc = system('nproc')
+    let b:smp = '-j' . substitute(l:nproc, '\n\+$', '', '') 
+    return 1
+  endif
+  return 0
+endfunction
+
 " Public Interface:
 command! -nargs=? CMake call s:cmake(<f-args>)
 command! CMakeClean call s:cmakeclean()
@@ -157,7 +169,13 @@ function! s:cmake(...)
     return
   endif
 
-  let &makeprg = 'cmake --build ' . shellescape(b:build_dir) . ' --target'
+  if g:cmake_use_smp && s:find_smp()
+    let l:smp = ' ' . shellescape(b:smp)
+  else
+    let l:smp = ''
+  endif
+
+  let &makeprg = 'cmake --build ' . shellescape(b:build_dir) . l:smp . ' --target'
   call s:cmake_configure()
 endfunction
 
