@@ -36,6 +36,8 @@ result of the cmake command in the quickfix as well.
 
  * `g:cmake_build_shared_libs` same as `-DBUILD_SHARED_LIBS`
 
+ * `g:cmake_toolchain_file` same as `-DCMAKE_TOOLCHAIN_FILE`
+
  * `g:cmake_project_generator` same as `-G`. Changes will have no effect until you run :CMakeClean and then :CMake.
 
  * `g:cmake_export_compile_commands` same as `-DCMAKE_EXPORT_COMPILE_COMMANDS`.

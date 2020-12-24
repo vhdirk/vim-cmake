@@ -102,6 +102,9 @@ function! s:cmake_configure(cmake_vim_command_args)
   if exists("g:cmake_build_shared_libs")
     let l:argument += [ "-DBUILD_SHARED_LIBS:BOOL="          . g:cmake_build_shared_libs ]
   endif
+  if exists("g:cmake_toolchain_file")
+    let l:argument += [ "-DCMAKE_TOOLCHAIN_FILE:FILEPATH="  . g:cmake_toolchain_file ]
+  endif
   if g:cmake_export_compile_commands
     let l:argument += [ "-DCMAKE_EXPORT_COMPILE_COMMANDS=ON" ]
   endif
