@@ -157,6 +157,12 @@ function! s:find_smp()
   return 0
 endfunction
 
+command! -complete=customlist,ListTargets -nargs=1 Make :make <args>
+
+function! ListTargets(A, L, C)
+    return split(system("cmake --build . --target help"), '\n')
+endfunction
+
 " Public Interface:
 command! -nargs=? CMake call s:cmake(<f-args>)
 command! CMakeClean call s:cmakeclean()
