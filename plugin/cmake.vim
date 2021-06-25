@@ -163,8 +163,8 @@ function! ListTargets(A, L, C)
         return []
     endif
     let all_targets = split(system("cmake --build ". b:build_dir . " --target help | awk ' NR > 1 {print $2}'"), '\n')
-    " let targets = filter(all_targets, "val:v ~= ^A")
-    return all_targets
+    let targets = filter(all_targets, "v:val =~ '^" .. a:A .. "'")
+    return targets
 endfunction
 
 " Public Interface:
