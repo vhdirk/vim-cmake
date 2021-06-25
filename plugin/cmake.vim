@@ -157,6 +157,16 @@ function! s:find_smp()
   return 0
 endfunction
 
+command! -complete=customlist,ListTargets -nargs=1 Make :make <args>
+function! ListTargets(A, L, C)
+    if !exists("b:build_dir")
+        return []
+    endif
+    let all_targets = split(system("cmake --build ". b:build_dir . " --target help | awk ' NR > 1 {print $2}'"), '\n')
+    let targets = filter(all_targets, "v:val =~ '^" .. a:A .. "'")
+    return targets
+endfunction
+
 " Public Interface:
 command! -nargs=? CMake call s:cmake(<f-args>)
 command! CMakeClean call s:cmakeclean()
