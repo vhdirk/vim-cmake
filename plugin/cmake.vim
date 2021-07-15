@@ -188,7 +188,7 @@ function! s:cmake(...)
     let l:smp = ''
   endif
 
-  let &makeprg = 'cmake --build ' . shellescape(b:build_dir) . l:smp . ' --target'
+  let &makeprg = 'cmake --build ' . shellescape(b:build_dir) . l:smp . ' --'
   call s:cmake_configure(a:000)
 endfunction
 
